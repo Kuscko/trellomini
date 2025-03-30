@@ -19,19 +19,24 @@ Uses best web development practices for 2024 to my knowledge.
 #### Visual Studio
 1. Clone the Repository
 2. Open in Visual Studio
-3. Create a Python Virutal Environment <br />
+3. Change the name of the Folders from `DjangoWebTemplate` to what project name you chose, . i.e. `myproject`.
+4. CTRL+SHIFT+F (or MAC equivalent) and search for `DjangoWebTemplate`.
+5. Expand the box and type in the repository name you choose and confirm the replacement.
+6. Create a Python Virutal Environment <br />
     `CTRL+SHIFT+P` <br />
     `Type: "Environment"` <br />
     `Select: "Create Python Environment."` <br />
     `Select: "venv"` <br />
     `Choose your interpreter.` <br />
       *If you don't see an interpreter available, install python [here](https://www.python.org/downloads/)*
-4. Activate your new virtual environment
-5. Install required packages from requirements.txt <br />
+7. Activate your new virtual environment <br />
+    Linux: `source ./venv/Scripts/activate`
+    Windows: `./venv/Scripts/activate` 
+8. Install required packages from requirements.txt <br />
 `pip install -r requirements.txt` <br />
-6. Run the python migrations to create the database <br />
+9. Run the python migrations to create the database <br />
 `python manage.py migrate`
-7. Explore the files, especially settings.py and environment_template.py and configure as you see fit.
+10. Explore the files, especially settings.py and environment_template.py and configure as you see fit.
 
 
 
