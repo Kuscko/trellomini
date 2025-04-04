@@ -10,9 +10,9 @@ Uses best web development practices for 2024 to my knowledge.
 - User Registration, Login, and Logout views with endpoints.
 
 ### Packages Included:
-- Django==5.0.6 # Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design.
-- psycopg2==2.9.9 # Psycopg is the most popular PostgreSQL database adapter for the Python programming language.
-- django-ratelimit=4.1.0 # Django Ratelimit provides a decorator to rate-limit views. 
+- Django (latest) # Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design.
+- psycopg2 (latest) # Psycopg is the most popular PostgreSQL database adapter for the Python programming language.
+- django-ratelimit (latest) # Django Ratelimit provides a decorator to rate-limit views. 
 
 ### Deployment
 
