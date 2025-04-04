@@ -7,6 +7,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trellomini
 
     steps:
       - name: Checkout code
@@ -19,7 +22,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd trellomini
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
