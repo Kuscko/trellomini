@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from dotenv import load_dotenv
 from pathlib import Path
+import os
 import trellomini.environment as env # Import the environment variables, replace with 'environment.py' after filling in the missing info
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, '.env')) # Load environment variables from .env file
 
 
 # Quick-start development settings - unsuitable for production
@@ -61,8 +64,10 @@ ROOT_URLCONF = 'trellomini.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'trellomini', 'templates'),  # Directory for global templates
+            ],  # Directory for templates
+        'APP_DIRS': True,  # Enable loading templates from app directories
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -149,3 +154,18 @@ RATELIMIT_BY_VIEW = True # Rate limit by view
 RATELIMIT_FAILURE = "429" # HTTP status code for rate limit failure
 RATELIMIT_SUCCESS = "200 OK" # HTTP status code for rate limit success
 RATELIMIT_RESET_ON_SUCCESS = True # Reset rate limit on success
+
+# Redirect settings
+LOGIN_REDIRECT_URL = '/'  # where to go after login
+LOGOUT_REDIRECT_URL = '/accounts/login/'  # where to go after logout
+
+# Email settings
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 25))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() in ['true', '1', 'yes']
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "webmaster@localhost")
+EMAIL_SUBJECT_PREFIX = os.getenv("EMAIL_SUBJECT_PREFIX", "[Test] ")
+# You can get Mailtrap credentials for free from mailtrap.io.
