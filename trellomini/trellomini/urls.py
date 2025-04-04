@@ -14,10 +14,17 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
+#trellomini/urls.py
 from django.contrib import admin
 from django.urls import include, path
+from .views import home_view
 
 urlpatterns = [
+    # Default Pages
+    path('', home_view, name='home'),
     path('admin/', admin.site.urls),
-    path('', include('users.urls')), # Include the urls from the users app
+    # Authentication Pages
+    path('accounts/', include('users.urls'), name="accounts"), # Include the custom authentication urls, put fisrst to avoid conflict with the default authentication urls
+    path('accounts/', include('django.contrib.auth.urls'), name="accounts"), # Include the authentication urls 
 ]
