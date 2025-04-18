@@ -10,14 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from dotenv import load_dotenv
-from pathlib import Path
 import os
-import trellomini.environment as env # Import the environment variables, replace with 'environment.py' after filling in the missing info
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+import trellomini.environment as env  # Import the environment variables, replace with 'environment.py' after filling in the missing info
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(os.path.join(BASE_DIR, '.env')) # Load environment variables from .env file
+load_dotenv(os.path.join(BASE_DIR, ".env"))  # Load environment variables from .env file
 
 
 # Quick-start development settings - unsuitable for production
@@ -34,70 +36,72 @@ ALLOWED_HOSTS = env.ALLOWED_HOSTS
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Add other installed apps here
     # ...
     # Add created apps here
-    'users',
-    'projects',
+    "users",
+    "projects",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Add other middleware here
-    'django_ratelimit.middleware.RatelimitMiddleware', # Middleware for rate limiting to prevent abuse of the API
+    "django_ratelimit.middleware.RatelimitMiddleware",  # Middleware for rate limiting to prevent abuse of the API
 ]
 
-ROOT_URLCONF = 'trellomini.urls'
+ROOT_URLCONF = "trellomini.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'trellomini', 'templates'),  # Directory for global templates
-            ],  # Directory for templates
-        'APP_DIRS': True,  # Enable loading templates from app directories
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(
+                BASE_DIR, "trellomini", "templates"
+            ),  # Directory for global templates
+        ],  # Directory for templates
+        "APP_DIRS": True,  # Enable loading templates from app directories
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'trellomini.wsgi.application'
+WSGI_APPLICATION = "trellomini.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     },
-    'production': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.DATABASE_NAME,  # Name of your database
-        'USER': env.DATABASE_USER,  # Username for your database
-        'PASSWORD': env.DATABASE_PASSWORD,  # Password for your database
-        'HOST': env.DATABASE_HOST,  # Name of the service defined in docker-compose.yml
-        'PORT': env.DATABASE_PORT,  # Default port for PostgreSQL
-    }
+    "production": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env.DATABASE_NAME,  # Name of your database
+        "USER": env.DATABASE_USER,  # Username for your database
+        "PASSWORD": env.DATABASE_PASSWORD,  # Password for your database
+        "HOST": env.DATABASE_HOST,  # Name of the service defined in docker-compose.yml
+        "PORT": env.DATABASE_PORT,  # Default port for PostgreSQL
+    },
 }
 
 
@@ -106,16 +110,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -123,9 +127,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -135,37 +139,39 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Add custom settings here
 
 # Rate limit settings
-RATELIMIT_ENABLE = True # Enable rate limiting
-RATELIMIT_USE_CACHE = "default" # Use the default cache
-RATELIMIT_GLOBAL = None # No global rate limit
-RATELIMIT_BY_USER = True # Rate limit by user
-RATELIMIT_BY_IP = True # Rate limit by IP address
-RATELIMIT_BY_VIEW = True # Rate limit by view
-RATELIMIT_FAILURE = "429" # HTTP status code for rate limit failure
-RATELIMIT_SUCCESS = "200 OK" # HTTP status code for rate limit success
-RATELIMIT_RESET_ON_SUCCESS = True # Reset rate limit on success
+RATELIMIT_ENABLE = True  # Enable rate limiting
+RATELIMIT_USE_CACHE = "default"  # Use the default cache
+RATELIMIT_GLOBAL = None  # No global rate limit
+RATELIMIT_BY_USER = True  # Rate limit by user
+RATELIMIT_BY_IP = True  # Rate limit by IP address
+RATELIMIT_BY_VIEW = True  # Rate limit by view
+RATELIMIT_FAILURE = "429"  # HTTP status code for rate limit failure
+RATELIMIT_SUCCESS = "200 OK"  # HTTP status code for rate limit success
+RATELIMIT_RESET_ON_SUCCESS = True  # Reset rate limit on success
 
 # Redirect settings
-LOGIN_REDIRECT_URL = '/'  # where to go after login
-LOGOUT_REDIRECT_URL = '/accounts/login/'  # where to go after logout
+LOGIN_REDIRECT_URL = "/dashboard/"  # where to go after login
+LOGOUT_REDIRECT_URL = "/accounts/login/"  # where to go after logout
 
 # Email settings
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_BACKEND = os.getenv(
+    "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
+)
 EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", 25))
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() in ['true', '1', 'yes']
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "False").lower() in ["true", "1", "yes"]
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "webmaster@localhost")
 EMAIL_SUBJECT_PREFIX = os.getenv("EMAIL_SUBJECT_PREFIX", "[Test] ")
 # You can get Mailtrap credentials for free from mailtrap.io.

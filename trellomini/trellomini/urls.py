@@ -15,16 +15,24 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
-#trellomini/urls.py
+# trellomini/urls.py
 from django.contrib import admin
 from django.urls import include, path
-from .views import home_view
+
+from .views import dashboard_view, home_view, project_view, task_view
 
 urlpatterns = [
     # Default Pages
-    path('', home_view, name='home'),
-    path('admin/', admin.site.urls),
+    path("", home_view, name="home"),
+    path("admin/", admin.site.urls),
+    path("dashboard/", dashboard_view, name="dashboard"),
+    path("projects/", project_view, name="project"),
+    path("tasks/", task_view, name="task"),
     # Authentication Pages
-    path('accounts/', include('users.urls'), name="accounts"), # Include the custom authentication urls, put fisrst to avoid conflict with the default authentication urls
-    path('accounts/', include('django.contrib.auth.urls'), name="accounts"), # Include the authentication urls 
+    path(
+        "accounts/", include("users.urls"), name="accounts"
+    ),  # Include the custom authentication urls, put fisrst to avoid conflict with the default authentication urls
+    path(
+        "accounts/", include("django.contrib.auth.urls"), name="accounts"
+    ),  # Include the authentication urls
 ]
