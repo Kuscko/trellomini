@@ -9,7 +9,8 @@ function handleDrop(event) {
   event.preventDefault();
   const newStatus = event.currentTarget.getAttribute("data-status");
 
-  fetch(`/tasks/${draggedTaskId}/status/${newStatus}/`, {
+  const projectPk = document.getElementById("kanban-board").getAttribute("data-project-pk");
+  fetch(`/projects/${projectPk}/tasks/${draggedTaskId}/status/${newStatus}/`, {
     method: 'POST',
     headers: {
       'X-CSRFToken': getCookie('csrftoken'),
