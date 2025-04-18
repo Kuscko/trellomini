@@ -19,17 +19,34 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from .views import home_view
+from .views import (
+    dashboard_view,
+    home_view,
+    project_confirm_delete_view,
+    project_form_view,
+    project_view,
+    task_confirm_delete_view,
+    task_form_view,
+    task_view,
+)
 
 urlpatterns = [
     # Default Pages
     path("", home_view, name="home"),
+    path("dashboard/", dashboard_view, name="dashboard"),  # Include the dashboard urls
+    
+    # Projects Pages
+    path("project_confirm_delete/", project_confirm_delete_view, name="project_confirm_delete"),  # Include the dashboard urls
+    path("project_form/", project_form_view, name="project_form"),  # Include the dashboard urls
+    path("project/", project_view, name="project"),  # Include the dashboard urls
+    
+    # Task Pages
+    path("task_confirm_delete/", task_confirm_delete_view, name="task_confirm_delete"),  # Include the dashboard urls
+    path("task_form/", task_form_view, name="task_form"),  # Include the dashboard urls
+    path("task/", task_view, name="task"),  # Include the dashboard urls
     path("admin/", admin.site.urls),
+    
     # Authentication Pages
-    path(
-        "accounts/", include("users.urls"), name="accounts"
-    ),  # Include the custom authentication urls, put fisrst to avoid conflict with the default authentication urls
-    path(
-        "accounts/", include("django.contrib.auth.urls"), name="accounts"
-    ),  # Include the authentication urls
+    path("accounts/", include("users.urls"), name="accounts"),  # Include the custom authentication urls, put fisrst to avoid conflict with the default authentication urls
+    path("accounts/", include("django.contrib.auth.urls"), name="accounts"),  # Include the authentication urls
 ]
