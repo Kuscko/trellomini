@@ -4,7 +4,9 @@ from django.db.models import Q
 from .models import Project, Task
 from .forms import ProjectForm, TaskForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -135,3 +137,19 @@ def task_detail(request, project_pk, task_pk):
         return HttpResponseForbidden("You do not have permission to view this task.")
 
     return render(request, 'projects/task_detail.html', {'task': task, 'project': project})
+
+@login_required
+@require_POST
+def change_task_status(request, pk, new_status):
+    """Change the status of a task."""
+    task = get_object_or_404(Task, pk=pk)
+
+    if request.user != task.project.owner and request.user != task.assignee:
+        return HttpResponseForbidden("You do not have permission to update this task.")
+
+    if new_status not in dict(Task.STATUS_CHOICES):
+        return HttpResponseForbidden("Invalid status.")
+
+    task.status = new_status
+    task.save()
+    return JsonResponse({'success': True})
