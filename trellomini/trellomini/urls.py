@@ -24,6 +24,7 @@ urlpatterns = [
     # Default Pages
     path('', home_view, name='home'),
     path('admin/', admin.site.urls),
+    path('projects/', include('projects.urls'), name="projects"), # Include the projects urls
     # Authentication Pages
     path('accounts/', include('users.urls'), name="accounts"), # Include the custom authentication urls, put fisrst to avoid conflict with the default authentication urls
     path('accounts/', include('django.contrib.auth.urls'), name="accounts"), # Include the authentication urls 
