@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.http import JsonResponse
+from django.contrib import messages
 
 # Create your views here.
 
@@ -26,7 +27,8 @@ def project_detail(request, pk):
     project = get_object_or_404(Project.objects.prefetch_related("tasks"), pk=pk)
 
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
-        return HttpResponseForbidden("You do not have permission to view this project.")
+        messages.error(request, "You do not have permission to view this project.")
+        return redirect('project_list')
 
     return render(request, 'projects/project_detail.html', {'project': project})
 
@@ -39,6 +41,7 @@ def project_create(request):
             project = form.save(commit=False)
             project.owner = request.user
             project.save()
+            messages.success(request, "Project created successfully.")
             return redirect('project_list')
     else:
         form = ProjectForm()
@@ -52,6 +55,7 @@ def project_update(request, pk):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
+            messages.success(request, "Project updated successfully.")
             return redirect('project_list')
     else:
         form = ProjectForm(instance=project)
@@ -63,6 +67,7 @@ def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == 'POST':
         project.delete()
+        messages.success(request, "Project deleted successfully.")
         return redirect('project_list')
     return render(request, 'projects/project_confirm_delete.html', {'project': project})
 
@@ -76,7 +81,8 @@ def task_create(request, project_pk):
     # Check if the user is the owner of the project or assigned to it
     # This check is necessary to prevent unauthorized users from creating tasks in the project.
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
-        return HttpResponseForbidden("You do not have permission to create tasks in this project.")
+        messages.error(request, "You do not have permission to create tasks in this project.")
+        return redirect('project_detail', pk=project.pk)
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -98,7 +104,8 @@ def task_update(request, project_pk, task_pk):
 
     # Check if the user is the owner of the project or assigned to the task
     if request.user != project.owner and task.assignee != request.user:
-        return HttpResponseForbidden("You do not have permission to update this task.")
+        messages.error(request, "You do not have permission to update this task.")
+        return redirect('project_detail', pk=project.pk)
 
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
@@ -118,7 +125,8 @@ def task_delete(request, project_pk, task_pk):
 
     # Check if the user is the owner of the project or assigned to the task
     if request.user != project.owner and task.assignee != request.user:
-        return HttpResponseForbidden("You do not have permission to delete this task.")
+        messages.error(request, "You do not have permission to delete this task.")
+        return redirect('project_detail', pk=project.pk)
 
     if request.method == 'POST':
         task.delete()
@@ -134,7 +142,8 @@ def task_detail(request, project_pk, task_pk):
 
     # Check if the user is the owner of the project or assigned to the task
     if request.user != project.owner and task.assignee != request.user:
-        return HttpResponseForbidden("You do not have permission to view this task.")
+        messages.error(request, "You do not have permission to view this task.")
+        return redirect('project_detail', pk=project.pk)
 
     return render(request, 'projects/task_detail.html', {'task': task, 'project': project})
 
@@ -145,10 +154,12 @@ def change_task_status(request, pk, new_status):
     task = get_object_or_404(Task, pk=pk)
 
     if request.user != task.project.owner and request.user != task.assignee:
-        return HttpResponseForbidden("You do not have permission to update this task.")
+        messages.error(request, "You do not have permission to update this task.")
+        return redirect('project_detail', pk=task.project.pk)
 
     if new_status not in dict(Task.STATUS_CHOICES):
-        return HttpResponseForbidden("Invalid status.")
+        messages.error(request, "Invalid status.")
+        return redirect('project_detail', pk=task.project.pk)
 
     task.status = new_status
     task.save()
