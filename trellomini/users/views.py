@@ -12,6 +12,7 @@ def signup_view(request):
             messages.success(request, "Account created successfully!")
             return redirect('login')
     else:
-        messages.error(request, "Please correct the errors below.")
         form = CustomUserCreationForm()
+    if request.method == 'POST' and not form.is_valid():
+        messages.error(request, "Please correct the errors below.")
     return render(request, 'registration/signup.html', {'form': form})
