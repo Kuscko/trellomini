@@ -1,0 +1,28 @@
+<!-- templates/tasks/create_task.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light">
+        {% if form.instance.pk %} Edit Task {% else %} Create Task {% endif %}
+      </h1>
+
+      <form method="POST"
+            action="{% if form.instance.pk %}
+                      {% url 'task_update' project.pk form.instance.pk %}
+                    {% else %}
+                      {% url 'task_create' project.pk %}
+                    {% endif %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-primary mt-3">
+          {% if form.instance.pk %} Save Task {% else %} Create Task {% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

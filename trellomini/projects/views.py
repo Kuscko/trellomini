@@ -19,7 +19,7 @@ def project_list(request):
     Users can see projects they own and projects they are assigned to.
     """
     projects = Project.objects.filter(Q(owner=request.user) | Q(tasks__assignee=request.user)).distinct()
-    return render(request, 'projects/project_list.html', {'projects': projects})
+    return render(request, 'dashboard/dashboard.html', {'projects': projects})
 
 def project_detail(request, pk):
     """View to display project details."""
@@ -28,7 +28,7 @@ def project_detail(request, pk):
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
         return HttpResponseForbidden("You do not have permission to view this project.")
 
-    return render(request, 'projects/project_detail.html', {'project': project})
+    return render(request, 'projects/project.html', {'project': project})
 
 @login_required
 def project_create(request):
@@ -88,7 +88,7 @@ def task_create(request, project_pk):
     else:
         form = TaskForm()
 
-    return render(request, 'projects/task_form.html', {'form': form, 'project': project})
+    return render(request, 'tasks/task_form.html', {'form': form, 'project': project})
 
 @login_required
 def task_update(request, project_pk, task_pk):
@@ -108,7 +108,7 @@ def task_update(request, project_pk, task_pk):
     else:
         form = TaskForm(instance=task)
 
-    return render(request, 'projects/task_form.html', {'form': form, 'project': project})
+    return render(request, 'tasks/task_form.html', {'form': form, 'project': project})
 
 @login_required
 def task_delete(request, project_pk, task_pk):
@@ -124,7 +124,7 @@ def task_delete(request, project_pk, task_pk):
         task.delete()
         return redirect('project_detail', pk=project.pk)
 
-    return render(request, 'projects/task_confirm_delete.html', {'task': task, 'project': project})
+    return render(request, 'tasks/task_confirm_delete.html', {'task': task, 'project': project})
 
 @login_required
 def task_detail(request, project_pk, task_pk):
@@ -136,7 +136,7 @@ def task_detail(request, project_pk, task_pk):
     if request.user != project.owner and task.assignee != request.user:
         return HttpResponseForbidden("You do not have permission to view this task.")
 
-    return render(request, 'projects/task_detail.html', {'task': task, 'project': project})
+    return render(request, 'tasks/task.html', {'task': task, 'project': project})
 
 @login_required
 @require_POST
