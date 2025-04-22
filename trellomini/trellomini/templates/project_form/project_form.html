@@ -13,7 +13,7 @@
             action="{% if form.instance.pk %}
                       {% url 'project_update' form.instance.pk %}
                     {% else %}
-                      {% url 'project_create' %}
+                      {% url 'project_form' %}
                     {% endif %}">
         {% csrf_token %}
 
