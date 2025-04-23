@@ -7,11 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.http import JsonResponse
+import json
 
 # Create your views here.
-
-# Project Views
-
 @login_required
 def project_list(request):
     """
@@ -24,11 +22,12 @@ def project_list(request):
 def project_detail(request, pk):
     """View to display project details."""
     project = get_object_or_404(Project.objects.prefetch_related("tasks"), pk=pk)
+    statuses = Task.STATUS_CHOICES
 
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
         return HttpResponseForbidden("You do not have permission to view this project.")
 
-    return render(request, 'projects/project.html', {'project': project})
+    return render(request, 'project/project.html', {'project': project, 'statuses': statuses})
 
 @login_required
 def project_create(request):
@@ -42,7 +41,7 @@ def project_create(request):
             return redirect('project_list')
     else:
         form = ProjectForm()
-    return render(request, 'projects/project_form.html', {'form': form})
+    return render(request, 'project_form/project_form.html', {'form': form})
 
 @login_required
 def project_update(request, pk):
@@ -55,7 +54,7 @@ def project_update(request, pk):
             return redirect('project_list')
     else:
         form = ProjectForm(instance=project)
-    return render(request, 'projects/project_form.html', {'form': form})
+    return render(request, 'project_form/project_form.html', {'form': form})
 
 @login_required
 def project_delete(request, pk):
@@ -64,17 +63,14 @@ def project_delete(request, pk):
     if request.method == 'POST':
         project.delete()
         return redirect('project_list')
-    return render(request, 'projects/project_confirm_delete.html', {'project': project})
+    return render(request, 'project_confirm_delete/project_confirm_delete.html', {'project': project})
 
 # Task Views
-
 @login_required
 def task_create(request, project_pk):
     """View to create a new task."""
     project = get_object_or_404(Project, pk=project_pk)
 
-    # Check if the user is the owner of the project or assigned to it
-    # This check is necessary to prevent unauthorized users from creating tasks in the project.
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
         return HttpResponseForbidden("You do not have permission to create tasks in this project.")
 
@@ -88,7 +84,7 @@ def task_create(request, project_pk):
     else:
         form = TaskForm()
 
-    return render(request, 'tasks/task_form.html', {'form': form, 'project': project})
+    return render(request, 'task_form/task_form.html', {'form': form, 'project': project})
 
 @login_required
 def task_update(request, project_pk, task_pk):
@@ -96,7 +92,6 @@ def task_update(request, project_pk, task_pk):
     project = get_object_or_404(Project, pk=project_pk)
     task = get_object_or_404(Task, pk=task_pk, project=project)
 
-    # Check if the user is the owner of the project or assigned to the task
     if request.user != project.owner and task.assignee != request.user:
         return HttpResponseForbidden("You do not have permission to update this task.")
 
@@ -108,7 +103,7 @@ def task_update(request, project_pk, task_pk):
     else:
         form = TaskForm(instance=task)
 
-    return render(request, 'tasks/task_form.html', {'form': form, 'project': project})
+    return render(request, 'task_form/task_form.html', {'form': form, 'project': project})
 
 @login_required
 def task_delete(request, project_pk, task_pk):
@@ -116,7 +111,6 @@ def task_delete(request, project_pk, task_pk):
     project = get_object_or_404(Project, pk=project_pk)
     task = get_object_or_404(Task, pk=task_pk, project=project)
 
-    # Check if the user is the owner of the project or assigned to the task
     if request.user != project.owner and task.assignee != request.user:
         return HttpResponseForbidden("You do not have permission to delete this task.")
 
@@ -124,7 +118,7 @@ def task_delete(request, project_pk, task_pk):
         task.delete()
         return redirect('project_detail', pk=project.pk)
 
-    return render(request, 'tasks/task_confirm_delete.html', {'task': task, 'project': project})
+    return render(request, 'task_confirm_delete/task_confirm_delete.html', {'task': task, 'project': project})
 
 @login_required
 def task_detail(request, project_pk, task_pk):
@@ -132,24 +126,22 @@ def task_detail(request, project_pk, task_pk):
     project = get_object_or_404(Project, pk=project_pk)
     task = get_object_or_404(Task, pk=task_pk, project=project)
 
-    # Check if the user is the owner of the project or assigned to the task
     if request.user != project.owner and task.assignee != request.user:
         return HttpResponseForbidden("You do not have permission to view this task.")
 
-    return render(request, 'tasks/task.html', {'task': task, 'project': project})
+    return render(request, 'task/task.html', {'task': task, 'project': project})
 
 @login_required
 @require_POST
-def change_task_status(request, pk, new_status):
+def update_task_status(request, task_id):
     """Change the status of a task."""
-    task = get_object_or_404(Task, pk=pk)
-
-    if request.user != task.project.owner and request.user != task.assignee:
-        return HttpResponseForbidden("You do not have permission to update this task.")
-
-    if new_status not in dict(Task.STATUS_CHOICES):
-        return HttpResponseForbidden("Invalid status.")
-
-    task.status = new_status
-    task.save()
-    return JsonResponse({'success': True})
+    if request.method == "POST":
+        try:
+            task = Task.objects.get(pk=task_id, project__owner=request.user)
+            data = json.loads(request.body)
+            task.status = data.get("status", task.status)
+            task.save()
+            return JsonResponse({"success": True, "status": task.status})
+        except Task.DoesNotExist:
+            return JsonResponse({"error": "Task not found"}, status=404)
+    return JsonResponse({"error": "Invalid method"}, status=405)

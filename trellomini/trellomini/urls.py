@@ -34,16 +34,7 @@ urlpatterns = [
     # Default Pages
     path("", home_view, name="home"),
     path("dashboard/", dashboard_view, name="dashboard"),  # Include the dashboard urls
-    
-    # Projects Pages
-    path("project_confirm_delete/", project_confirm_delete_view, name="project_confirm_delete"),  # Include the dashboard urls
-    path("project_form/", project_form_view, name="project_form"),  # Include the dashboard urls
-    path("project/", project_view, name="project"),  # Include the dashboard urls
-    
-    # Task Pages
-    path("task_confirm_delete/", task_confirm_delete_view, name="task_confirm_delete"),  # Include the dashboard urls
-    path("task_form/", task_form_view, name="task_form"),  # Include the dashboard urls
-    path("task/", task_view, name="task"),  # Include the dashboard urls
+    path("projects/", include("projects.urls"), name="projects"),  # Include the projects urls
     path("admin/", admin.site.urls),
     
     # Authentication Pages

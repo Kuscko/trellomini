@@ -2,28 +2,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="py-5 text-center container">
-  <div class="row py-lg-5">
-    <div class="col-lg-6 col-md-8 mx-auto">
-      <h1 class="fw-light">
-        {% if form.instance.pk %} Edit Project {% else %} Create Project {% endif %}
-      </h1>
-
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <main class="w-100 m-auto" style="max-width: 500px;">
+    <div class="card shadow p-4">
       <form method="POST"
             action="{% if form.instance.pk %}
                       {% url 'project_update' form.instance.pk %}
                     {% else %}
-                      {% url 'project_form' %}
+                      {% url 'project_create' %}
                     {% endif %}">
         {% csrf_token %}
+        <h1 class="h4 mb-4 fw-bold text-center">
+          {% if form.instance.pk %} Edit Project {% else %} Create Project {% endif %}
+        </h1>
 
-        {{ form.as_p }}
+        <!-- Name -->
+        <div class="mb-3">
+          <label for="{{ form.name.id_for_label }}">Project Name</label>
+          {{ form.name }}
+        </div>
 
-        <button type="submit" class="btn btn-primary mt-3">
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}">Description</label>
+          {{ form.description }}
+        </div>
+
+        <button type="submit" class="w-100 btn btn-primary">
           {% if form.instance.pk %} Save Changes {% else %} Create Project {% endif %}
         </button>
       </form>
     </div>
-  </div>
-</section>
+  </main>
+</div>
 {% endblock %}
