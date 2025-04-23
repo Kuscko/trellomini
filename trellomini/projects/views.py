@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 import json
+from django.contrib import messages
 
 # Create your views here.
 @login_required
@@ -25,7 +26,8 @@ def project_detail(request, pk):
     statuses = Task.STATUS_CHOICES
 
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
-        return HttpResponseForbidden("You do not have permission to view this project.")
+        messages.error(request, "You do not have permission to view this project.")
+        return redirect('project_list')
 
     return render(request, 'project/project.html', {'project': project, 'statuses': statuses})
 
@@ -38,6 +40,7 @@ def project_create(request):
             project = form.save(commit=False)
             project.owner = request.user
             project.save()
+            messages.success(request, "Project created successfully.")
             return redirect('project_list')
     else:
         form = ProjectForm()
@@ -51,6 +54,7 @@ def project_update(request, pk):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
+            messages.success(request, "Project updated successfully.")
             return redirect('project_list')
     else:
         form = ProjectForm(instance=project)
@@ -62,6 +66,7 @@ def project_delete(request, pk):
     project = get_object_or_404(Project, pk=pk, owner=request.user)
     if request.method == 'POST':
         project.delete()
+        messages.success(request, "Project deleted successfully.")
         return redirect('project_list')
     return render(request, 'project_confirm_delete/project_confirm_delete.html', {'project': project})
 
@@ -72,7 +77,8 @@ def task_create(request, project_pk):
     project = get_object_or_404(Project, pk=project_pk)
 
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
-        return HttpResponseForbidden("You do not have permission to create tasks in this project.")
+        messages.error(request, "You do not have permission to create tasks in this project.")
+        return redirect('project_detail', pk=project.pk)
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -93,7 +99,8 @@ def task_update(request, project_pk, task_pk):
     task = get_object_or_404(Task, pk=task_pk, project=project)
 
     if request.user != project.owner and task.assignee != request.user:
-        return HttpResponseForbidden("You do not have permission to update this task.")
+        messages.error(request, "You do not have permission to update this task.")
+        return redirect('project_detail', pk=project.pk)
 
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
@@ -112,7 +119,8 @@ def task_delete(request, project_pk, task_pk):
     task = get_object_or_404(Task, pk=task_pk, project=project)
 
     if request.user != project.owner and task.assignee != request.user:
-        return HttpResponseForbidden("You do not have permission to delete this task.")
+        messages.error(request, "You do not have permission to delete this task.")
+        return redirect('project_detail', pk=project.pk)
 
     if request.method == 'POST':
         task.delete()
@@ -127,7 +135,8 @@ def task_detail(request, project_pk, task_pk):
     task = get_object_or_404(Task, pk=task_pk, project=project)
 
     if request.user != project.owner and task.assignee != request.user:
-        return HttpResponseForbidden("You do not have permission to view this task.")
+        messages.error(request, "You do not have permission to view this task.")
+        return redirect('project_detail', pk=project.pk)
 
     return render(request, 'task/task.html', {'task': task, 'project': project})
 
