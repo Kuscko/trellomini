@@ -86,6 +86,7 @@ def task_create(request, project_pk):
             task = form.save(commit=False)
             task.project = project
             task.save()
+            messages.success(request, "Task created successfully.")
             return redirect('project_detail', pk=project.pk)
     else:
         form = TaskForm()
@@ -106,6 +107,7 @@ def task_update(request, project_pk, task_pk):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
+            messages.success(request, "Task updated successfully.")
             return redirect('project_detail', pk=project.pk)
     else:
         form = TaskForm(instance=task)
@@ -124,6 +126,7 @@ def task_delete(request, project_pk, task_pk):
 
     if request.method == 'POST':
         task.delete()
+        messages.success(request, "Task deleted successfully.")
         return redirect('project_detail', pk=project.pk)
 
     return render(request, 'task_confirm_delete/task_confirm_delete.html', {'task': task, 'project': project})
