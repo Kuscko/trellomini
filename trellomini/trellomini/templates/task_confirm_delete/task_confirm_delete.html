@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="py-5 text-center container">
+  <div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+      <h1 class="fw-light text-danger">Delete Task</h1>
+      <p class="lead text-muted">Are you sure you want to delete the task <strong>{{ task.title }}</strong> from <strong>{{ project.name }}</strong>?</p>
+
+      <form method="POST">
+        {% csrf_token %}
+        <a href="{% url 'task_detail' project.id task.id %}" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

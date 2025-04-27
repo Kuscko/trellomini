@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <main class="w-100 m-auto" style="max-width: 500px;">
+    <div class="card shadow p-4">
+      <form method="POST"
+            action="{% if form.instance.pk %}
+                      {% url 'task_update' project.pk form.instance.pk %}
+                    {% else %}
+                      {% url 'task_create' project.pk %}
+                    {% endif %}">
+        {% csrf_token %}
+        <h1 class="h4 mb-4 fw-bold text-center">
+          {% if form.instance.pk %} Edit Task {% else %} Create Task {% endif %}
+        </h1>
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label for="{{ form.title.id_for_label }}">Task Title</label>
+          {{ form.title }}
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}">Description</label>
+          {{ form.description }}
+        </div>
+
+        <!-- Status -->
+        <div class="mb-3">
+          <label for="{{ form.status.id_for_label }}">Status</label>
+          {{ form.status }}
+        </div>
+
+        <!-- Assignee -->
+        <div class="mb-3">
+          <label for="{{ form.assignee.id_for_label }}">Assign To</label>
+          {{ form.assignee }}
+        </div>
+
+        <button type="submit" class="w-100 btn btn-primary">
+          {% if form.instance.pk %} Save Task {% else %} Create Task {% endif %}
+        </button>
+      </form>
+    </div>
+  </main>
+</div>
+{% endblock %}

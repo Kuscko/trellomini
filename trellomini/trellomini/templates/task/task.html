@@ -1,0 +1,27 @@
+<!-- templates/tasks/task.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">{{ task.title }}</h1>
+        <p class="lead text-muted">{{ task.description|default:"No description." }}</p>
+        <p class="lead text-muted">Status: <strong>{{ task.get_status_display }}</strong></p>
+        <p class="lead text-muted">Assigned to: <strong>
+          {% if task.assignee %}
+            {{ task.assignee.username }}
+          {% else %}
+            Unassigned
+          {% endif %}
+        </strong></p>
+        <p><small>Created: {{ task.created_at }} | Updated: {{ task.updated_at }}</small></p>
+        <div class="d-flex gap-2">
+          <a href="{% url 'task_update' project.id task.id %}" class="btn btn-primary">Edit Task</a>
+          <a href="{% url 'task_delete' project.id task.id %}" class="btn btn-danger">Delete Task</a>
+          <a href="{% url 'project_detail' project.id %}" class="btn btn-secondary">Back to Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
