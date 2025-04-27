@@ -1,29 +1,23 @@
 # projects/views.py
-from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
-from .models import Project, Task
+from django.shortcuts import render, redirect
 from .forms import ProjectForm, TaskForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.http import HttpResponseForbidden
 from django.http import JsonResponse
 import json
 from django.contrib import messages
+from .services import ProjectService, TaskService
 
-# Create your views here.
+# Project Views
 @login_required
-def project_list(request):
-    """
-    View to list all projects.\n
-    Users can see projects they own and projects they are assigned to.
-    """
-    projects = Project.objects.filter(Q(owner=request.user) | Q(tasks__assignee=request.user)).distinct()
+def project_list(request, service=ProjectService):
+    projects = service.get_user_projects(request.user)
     return render(request, 'dashboard/dashboard.html', {'projects': projects})
 
-def project_detail(request, pk):
-    """View to display project details."""
-    project = get_object_or_404(Project.objects.prefetch_related("tasks"), pk=pk)
-    statuses = Task.STATUS_CHOICES
+@login_required
+def project_detail(request, pk, service=ProjectService):
+    project = service.get_project(pk)
+    statuses = project.tasks.model.STATUS_CHOICES
 
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
         messages.error(request, "You do not have permission to view this project.")
@@ -32,8 +26,7 @@ def project_detail(request, pk):
     return render(request, 'project/project.html', {'project': project, 'statuses': statuses})
 
 @login_required
-def project_create(request):
-    """View to create a new project."""
+def project_create(request, service=ProjectService):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
         if form.is_valid():
@@ -47,9 +40,9 @@ def project_create(request):
     return render(request, 'project_form/project_form.html', {'form': form})
 
 @login_required
-def project_update(request, pk):
-    """View to update an existing project."""
-    project = get_object_or_404(Project, pk=pk, owner=request.user)
+def project_update(request, pk, service=ProjectService):
+    project = service.get_user_project(pk, request.user)
+
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
@@ -61,20 +54,18 @@ def project_update(request, pk):
     return render(request, 'project_form/project_form.html', {'form': form})
 
 @login_required
-def project_delete(request, pk):
-    """View to delete a project."""
-    project = get_object_or_404(Project, pk=pk, owner=request.user)
+def project_delete(request, pk, service=ProjectService):
     if request.method == 'POST':
-        project.delete()
+        service.delete_project(pk, request.user)
         messages.success(request, "Project deleted successfully.")
         return redirect('project_list')
+    project = service.get_user_project(pk, request.user)
     return render(request, 'project_confirm_delete/project_confirm_delete.html', {'project': project})
 
 # Task Views
 @login_required
-def task_create(request, project_pk):
-    """View to create a new task."""
-    project = get_object_or_404(Project, pk=project_pk)
+def task_create(request, project_pk, project_service=ProjectService):
+    project = project_service.get_project(project_pk)
 
     if request.user != project.owner and not project.tasks.filter(assignee=request.user).exists():
         messages.error(request, "You do not have permission to create tasks in this project.")
@@ -90,14 +81,12 @@ def task_create(request, project_pk):
             return redirect('project_detail', pk=project.pk)
     else:
         form = TaskForm()
-
     return render(request, 'task_form/task_form.html', {'form': form, 'project': project})
 
 @login_required
-def task_update(request, project_pk, task_pk):
-    """View to update an existing task."""
-    project = get_object_or_404(Project, pk=project_pk)
-    task = get_object_or_404(Task, pk=task_pk, project=project)
+def task_update(request, project_pk, task_pk, project_service=ProjectService, task_service=TaskService):
+    project = project_service.get_project(project_pk)
+    task = task_service.get_task(project_pk, task_pk)
 
     if request.user != project.owner and task.assignee != request.user:
         messages.error(request, "You do not have permission to update this task.")
@@ -115,27 +104,24 @@ def task_update(request, project_pk, task_pk):
     return render(request, 'task_form/task_form.html', {'form': form, 'project': project})
 
 @login_required
-def task_delete(request, project_pk, task_pk):
-    """View to delete a task."""
-    project = get_object_or_404(Project, pk=project_pk)
-    task = get_object_or_404(Task, pk=task_pk, project=project)
-
-    if request.user != project.owner and task.assignee != request.user:
-        messages.error(request, "You do not have permission to delete this task.")
-        return redirect('project_detail', pk=project.pk)
-
+def task_delete(request, project_pk, task_pk, project_service=ProjectService, task_service=TaskService):
     if request.method == 'POST':
-        task.delete()
+        deleted_task = task_service.delete_task(project_pk, task_pk, request.user)
+        if not deleted_task:
+            messages.error(request, "You do not have permission to delete this task.")
+            return redirect('project_detail', pk=project_pk)
         messages.success(request, "Task deleted successfully.")
-        return redirect('project_detail', pk=project.pk)
+        return redirect('project_detail', pk=project_pk)
+
+    project = project_service.get_project(project_pk)
+    task = task_service.get_task(project_pk, task_pk)
 
     return render(request, 'task_confirm_delete/task_confirm_delete.html', {'task': task, 'project': project})
 
 @login_required
-def task_detail(request, project_pk, task_pk):
-    """View to display task details."""
-    project = get_object_or_404(Project, pk=project_pk)
-    task = get_object_or_404(Task, pk=task_pk, project=project)
+def task_detail(request, project_pk, task_pk, project_service=ProjectService, task_service=TaskService):
+    project = project_service.get_project(project_pk)
+    task = task_service.get_task(project_pk, task_pk)
 
     if request.user != project.owner and task.assignee != request.user:
         messages.error(request, "You do not have permission to view this task.")
@@ -145,16 +131,12 @@ def task_detail(request, project_pk, task_pk):
 
 @login_required
 @require_POST
-def update_task_status(request, task_id):
-    """Change the status of a task."""
-    if request.method == "POST":
-        try:
-            task = Task.objects.get(pk=task_id, project__owner=request.user)
-            data = json.loads(request.body)
-            task.status = data.get("status", task.status)
-            task.save()
-            return JsonResponse({"success": True, "status": task.status})
-        except Task.DoesNotExist:
-            return JsonResponse({"error": "Task not found"}, status=404)
-    return JsonResponse({"error": "Invalid method"}, status=405)
-  
+def update_task_status(request, task_id, task_service=TaskService):
+    try:
+        task = task_service.get_user_task(task_id, request.user)
+        data = json.loads(request.body)
+        task.status = data.get("status", task.status)
+        task.save()
+        return JsonResponse({"success": True, "status": task.status})
+    except Task.DoesNotExist:
+        return JsonResponse({"error": "Task not found"}, status=404)
