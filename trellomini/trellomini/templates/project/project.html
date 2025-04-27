@@ -1,0 +1,123 @@
+<!-- templates/projects/project.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="py-5 container">
+  <div class="text-center mb-5">
+    <h1 class="fw-light">Project</h1>
+    <h2>{{ project.name }}</h2>
+    <p>{{ project.description }}</p>
+    <p><small>Created: {{ project.created_at }} | Updated: {{ project.updated_at }}</small></p>
+    <div class="d-flex gap-2">
+      <a href="{% url 'project_update' project.id %}" class="btn btn-primary">Edit Project</a>
+      <a href="{% url 'project_delete' project.id %}" class="btn btn-danger">Delete Project</a>
+      <a href="{% url 'task_create' project.id %}" class="btn btn-success">Add Task</a>
+    </div>
+  </div>
+
+  <div class="container-fluid" id="kanban-board" data-project-pk="{{ project.id }}">
+    <div class="row min-vh-50">
+      <!-- Kanban Columns -->
+      {% for status, label in statuses %}
+      <div class="col-md-4 d-flex flex-column border-end">
+        <!-- Column header -->
+        <div class="bg-light text-center fw-bold py-2 border-bottom sticky-top">
+          {{ label }}
+        </div>
+          <!-- Scrollable column body -->
+          <div class="flex-grow-1 overflow-auto p-3 kanban-column" data-status="{{ status }}" style="max-height: calc(100vh - 56px);">
+            {% for task in project.tasks.all %}
+              {% if task.status == status %}
+              <div class="card mb-3 kanban-card border-start border-4" data-task-id="{{ task.id }}">
+                <div class="card-body">
+                  <h5 class="card-title">{{ task.title }}</h5>
+                  <p class="card-text">{{ task.description|default:"No description." }}</p>
+                  <p class="card-text"><small>Assigned to: 
+                    {% if task.assignee %}
+                      {{ task.assignee.username }}
+                    {% else %}
+                      Unassigned
+                    {% endif %}
+                  </small></p>
+                  <p class="card-text"><small>Created: {{ task.created_at }} | Updated: {{ task.updated_at }}</small></p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group gap-2">
+                      <a href="{% url 'task_update' project.id task.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                      <a href="{% url 'task_delete' project.id task.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                      <a href="{% url 'task_detail' project.id task.id %}" class="btn btn-sm btn-outline-primary">View</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- No tasks fallback + Add button -->
+  {% if project.tasks.count == 0 %}
+    <div class="text-center mt-4">
+      <p>No tasks available for this project.</p>
+      <form method="POST" action="{% url 'task_create' project.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Create Task</button>
+      </form>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
+
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+<script>
+  const columns = document.querySelectorAll('.kanban-column');
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".kanban-column").forEach(column => {
+      new Sortable(column, {
+        group: 'kanban',
+        animation: 150,
+        onEnd: function (evt) {
+          const card = evt.item;
+          const taskId = evt.item.dataset.taskId;
+          const newStatus = evt.to.dataset.status;
+
+          // Send AJAX request to update task status
+          fetch(`/projects/tasks/${taskId}/update-status/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus })
+          })
+          .then(response => {
+            if (!response.ok) throw new Error("Failed to update task status.");
+            return response.json();
+          })
+          .then(data => {
+            // Remove old border color classes
+            card.classList.remove("border-secondary", "border-warning", "border-success");
+  
+            // Add new border color based on status
+            if (newStatus === "TODO") {
+              card.classList.add("border-success");
+            } else if (newStatus === "DOING") {
+              card.classList.add("border-warning");
+            } else if (newStatus === "DONE") {
+              card.classList.add("border-secondary");
+            }
+          })
+          .then(data => console.log("Status updated:", data))
+          .catch(error => alert(error));
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

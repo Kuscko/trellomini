@@ -1,44 +1,84 @@
-# Django Web Template
-This is a Django Web Template meant to provide a springboard for creating a django web application with desired functionalities.
+# 🧱 TrelloMini
 
-Uses best web development practices for 2024 to my knowledge.
+TrelloMini is a lightweight, Kanban-style task and project management web application developed using Django. Created as the final project for **CEN4031 – Advanced Programming Frameworks**, this app provides a focused, minimal interface for tracking tasks within multiple projects using familiar Trello-like cards and columns.
 
-## Features
+---
 
-- Obfuscation of pertenant data for the web application (see settings.py and environment_template.py).
-- Customized settings to fit a user-centric web application with a sqlite3 database for the development environment and PostgreSQL database for the production environment.
-- User Registration, Login, and Logout views with endpoints.
+## 🚀 Features
 
-### Packages Included:
-- Django (latest) # Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design.
-- psycopg2 (latest) # Psycopg is the most popular PostgreSQL database adapter for the Python programming language.
-- django-ratelimit (latest) # Django Ratelimit provides a decorator to rate-limit views. 
+- 🧑‍💼 User authentication (login, logout, registration)
+- 📁 Project creation, editing, and deletion
+- 📝 Task creation, editing, and deletion within each project
+- 🧩 Simple Kanban board layout per project
+- 🎯 Real-time task status updates (To Do → In Progress → Done)
+- 🎨 Clean Bootstrap 5-powered UI with responsive layout
 
-### Deployment
+---
 
-#### Visual Studio
-1. Clone the Repository
-2. Open in Visual Studio
-3. Change the name of the Folders from `DjangoWebTemplate` to what project name you chose, . i.e. `myproject`.
-4. CTRL+SHIFT+F (or MAC equivalent) and search for `DjangoWebTemplate`.
-5. Expand the box and type in the repository name you choose and confirm the replacement.
-6. Create a Python Virutal Environment <br />
-    `CTRL+SHIFT+P` <br />
-    `Type: "Environment"` <br />
-    `Select: "Create Python Environment."` <br />
-    `Select: "venv"` <br />
-    `Choose your interpreter.` <br />
-      *If you don't see an interpreter available, install python [here](https://www.python.org/downloads/)*
-7. Activate your new virtual environment <br />
-    Linux: `source ./venv/Scripts/activate`
-    Windows: `./venv/Scripts/activate` 
-8. Install required packages from requirements.txt <br />
-`pip install -r requirements.txt` <br />
-9. Run the python migrations to create the database <br />
+## 🖼️ Preview
+
+[I am not quite sure how to do this with markdown. Please jump in if you know how to.]
+> A simple Kanban board interface per project.
+
+---
+
+# ⚙️ Installation
+
+> **Recommended**: Use a virtual environment before running the project.
+
+## Clone the repository
+`git clone https://github.com/Kuscko/trellomini.git`
+
+`cd trellomini`
+
+## Activate virtual environment (optional but recommended)
+`python -m venv .venv`
+
+`source .venv/Scripts/activate  # Windows`
+### OR
+`source .venv/bin/activate      # macOS/Linux`
+
+## Install required packages
+`pip install -r requirements.txt`
+
+## Run migrations
 `python manage.py migrate`
-10. Explore the files, especially settings.py and environment_template.py and configure as you see fit.
 
+## Start the development server
+`python manage.py runserver`
 
+---
 
+# 🧪 Running Tests
+`python manage.py test`
 
+---
 
+# 🗂️ Project Structure Overview
+
+```
+trellomini/
+├── projects/         # Handles Kanban functionality (models, views, templates)
+├── users/            # Handles authentication (sign up, login, logout)
+├── trellomini/       # Core Django settings and routing
+├── templates/        # HTML templates for dashboard and forms
+├── static/           # Static files (CSS, JS, images)
+├── db.sqlite3        # Local development database
+├── requirements.txt  # Python dependencies
+├── manage.py         # Django management utility
+└── README.md         # This file
+```
+
+---
+
+# 👥 Contributors
+- Tyler Bischoff – [📧Team Lead, Contributor]
+- Patrick Kelly – [🤘⭐ Dev, GitHub, Contributor]
+- Keaton Knippel – [👑GroupMe King, Contributor]
+- Clark Brown – [🥾Bootstrap Bro, Contributor]
+
+---
+
+# 📘 License
+This project is licensed under the MIT License. See LICENSE for more details.
+Developed for educational purposes as part of CEN4031 – Advanced Programming Frameworks at SPC.

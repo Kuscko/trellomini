@@ -6,8 +6,7 @@
 # Created by Application
 *.sqlite3
 .env
-.venv
-staticfiles/
+staticfiles
 
 # User-specific files
 *.rsuser
