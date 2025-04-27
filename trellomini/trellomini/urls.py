@@ -18,22 +18,17 @@ Including another URLconf
 # trellomini/urls.py
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
-from .views import (
-    dashboard_view,
-    home_view,
-    project_confirm_delete_view,
-    project_form_view,
-    project_view,
-    task_confirm_delete_view,
-    task_form_view,
-    task_view,
+from projects.views import (
+    project_list,
 )
 
 urlpatterns = [
     # Default Pages
-    path("", home_view, name="home"),
-    path("dashboard/", dashboard_view, name="dashboard"),  # Include the dashboard urls
+    # redirect the "" URL to the projects view for the dashboard
+    path("", RedirectView.as_view(url="/dashboard/", permanent=False)),  # Redirect the root URL to the dashboard
+    path("dashboard/", project_list, name="dashboard"),  # Include the dashboard urls
     path("projects/", include("projects.urls"), name="projects"),  # Include the projects urls
     path("admin/", admin.site.urls),
     
