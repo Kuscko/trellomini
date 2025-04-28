@@ -99,6 +99,12 @@ docker run \
 
 ---
 
+## Environment Requirements
+
+We suggest creating an account on [mailtrap](https://mailtrap.io) for enabling SMPT capabilities for 1000 free emails a month.
+
+---
+
 ## 🔧 Environment Variables
 TrelloMini uses a .env file to manage sensitive settings. Example:
 
