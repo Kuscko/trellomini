@@ -18,5 +18,8 @@ COPY . .
 # Collect static files (optional if using whitenoise or similar)
 RUN python manage.py collectstatic --noinput
 
+# Expose the port the app runs on
+EXPOSE 8000
+
 # Run the Django application
 CMD ["gunicorn", "trellomini.wsgi:application", "--bind", "0.0.0.0:8000"]
