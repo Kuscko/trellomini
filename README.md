@@ -71,7 +71,7 @@ python manage.py runserver
 
 ---
 
-##🐳 Docker Deployment
+## 🐳 Docker Deployment
 Build and run the container locally:
 ```
 docker build -t trellomini .
