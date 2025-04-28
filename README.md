@@ -69,6 +69,37 @@ python manage.py runserver
 
 ---
 
+## Docker Deployment
+Build and run the container locally:
+```
+docker build -t trellomini .
+docker run -p 8000:8000 trellomini
+```
+Or pull the latest image from DockerHub:
+```
+docker pull kusck0/trellomini:latest
+docker run -p 8000:8000 kusck0/trellomini:latest
+```
+
+---
+
+## 🔧 Environment Variables
+TrelloMini uses a .env file to manage sensitive settings. Example:
+
+```
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=live.smtp.mailtrap.io
+EMAIL_HOST_USER=smtp@mailtrap.io
+EMAIL_HOST_PASSWORD=your-password
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+DEFAULT_FROM_EMAIL=TrelloMini <hello@demomailtrap.co>
+EMAIL_SUBJECT_PREFIX=[TrelloMini]
+SECRET_KEY=your-django-secret-key
+DEBUG=False
+```
+---
+
 ## 🔐 Admin Access
 
 - Visit http://localhost:8000/admin
