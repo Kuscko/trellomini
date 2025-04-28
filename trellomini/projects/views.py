@@ -7,6 +7,7 @@ from django.http import JsonResponse
 import json
 from django.contrib import messages
 from .services import ProjectService, TaskService
+from models import Task
 
 # Project Views
 @login_required
