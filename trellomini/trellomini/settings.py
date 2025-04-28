@@ -15,8 +15,6 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-import trellomini.environment as env  # Import the environment variables, replace with 'environment.py' after filling in the missing info
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))  # Load environment variables from .env file
@@ -31,7 +29,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = env.ALLOWED_HOSTS
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -93,14 +91,6 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    },
-    "production": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env.DATABASE_NAME,  # Name of your database
-        "USER": env.DATABASE_USER,  # Username for your database
-        "PASSWORD": env.DATABASE_PASSWORD,  # Password for your database
-        "HOST": env.DATABASE_HOST,  # Name of the service defined in docker-compose.yml
-        "PORT": env.DATABASE_PORT,  # Default port for PostgreSQL
     },
 }
 
