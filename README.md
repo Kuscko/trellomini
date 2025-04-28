@@ -80,7 +80,21 @@ docker run -p 8000:8000 trellomini
 Or pull the latest image from DockerHub:
 ```
 docker pull kusck0/trellomini:latest
-docker run -p 8000:8000 kusck0/trellomini:latest
+docker run --env-file .env -p 8000:8000 kusck0/trellomini:latest
+```
+Or run it manually:
+```
+docker pull kusck0/trellomini:latest
+docker run \
+  -e SECRET_KEY=your-real-secret-key \
+  -e EMAIL_HOST_PASSWORD=your-real-smtp-password \
+  -e EMAIL_HOST_USER=smtp@mailtrap.io \
+  -e EMAIL_HOST=live.smtp.mailtrap.io \
+  -e EMAIL_PORT=587 \
+  -e EMAIL_USE_TLS=True \
+  -e DEBUG=False \
+  -p 8000:8000 \
+  your-dockerhub-username/trellomini:latest
 ```
 
 ---
@@ -100,6 +114,16 @@ EMAIL_SUBJECT_PREFIX=[TrelloMini]
 SECRET_KEY=your-django-secret-key
 DEBUG=False
 ```
+
+---
+
+## Container Configuration
+Exec this into your container or run this in the /app directory to set up the database:
+
+```
+python manage.py migrate
+```
+
 ---
 
 ## 🔐 Admin Access
