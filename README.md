@@ -1,3 +1,5 @@
+[![Deploy Django](https://github.com/Kuscko/trellomini/actions/workflows/django-build.yml/badge.svg)](https://github.com/Kuscko/trellomini/actions/workflows/django-build.yml)
+
 # 🧱 TrelloMini
 
 TrelloMini is a lightweight, Kanban-style task and project management web application developed using Django.
