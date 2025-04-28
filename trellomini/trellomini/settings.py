@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Add other installed apps here
-    # ...
+    'rest_framework',  # Django REST framework for building APIs
     # Add created apps here
     "users",
     "projects",
