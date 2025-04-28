@@ -71,7 +71,7 @@ python manage.py runserver
 
 ---
 
-## Docker Deployment
+##🐳 Docker Deployment
 Build and run the container locally:
 ```
 docker build -t trellomini .
@@ -94,12 +94,12 @@ docker run \
   -e EMAIL_USE_TLS=True \
   -e DEBUG=False \
   -p 8000:8000 \
-  your-dockerhub-username/trellomini:latest
+  kusck0/trellomini:latest
 ```
 
 ---
 
-## Environment Requirements
+##📁 Environment Requirements
 
 We suggest creating an account on [mailtrap](https://mailtrap.io) for enabling SMPT capabilities for 1000 free emails a month.
 
@@ -123,12 +123,21 @@ DEBUG=False
 
 ---
 
-## Container Configuration
-Exec this into your container or run this in the /app directory to set up the database:
+## 🛠️ Post-Deployment Setup
+After running the container:
+
+Create database tables:
 
 ```
-python manage.py migrate
+docker exec -it your-container-name python manage.py migrate
 ```
+
+Create a superuser (admin account):
+```
+docker exec -it your-container-name python manage.py createsuperuser
+```
+
+✅ Now the application is fully functional.
 
 ---
 
