@@ -1,0 +1,9 @@
+Django
+psycopg2
+django-ratelimit
+python-dotenv
+djangorestframework
+# testing libraries
+pytest
+pytest-django
+pytest-cov
