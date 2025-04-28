@@ -88,6 +88,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Create short SHA variable
+        id: vars
+        run: echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> $GITHUB_ENV
   
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
