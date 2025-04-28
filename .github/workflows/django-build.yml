@@ -28,11 +28,14 @@ jobs:
 
       - name: Create .env file
         run: |
+          echo "EMAIL_BACKEND=${{ secrets.EMAIL_BACKEND }}" >> .env
           echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
           echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
           echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
           echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
+          echo "DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}" >> .env
+          echo "EMAIL_SUBJECT_PREFIX=${{ secrets.EMAIL_SUBJECT_PREFIX }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           echo "DEBUG=${{ secrets.DEBUG }}" >> .env
 
@@ -65,19 +68,31 @@ jobs:
 
       - name: Create .env file
         run: |
+          echo "EMAIL_BACKEND=${{ secrets.EMAIL_BACKEND }}" >> .env
           echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
           echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
           echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
           echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
+          echo "DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}" >> .env
+          echo "EMAIL_SUBJECT_PREFIX=${{ secrets.EMAIL_SUBJECT_PREFIX }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           echo "DEBUG=${{ secrets.DEBUG }}" >> .env
-
-      - name: Build Application (placeholder step)
-        run: |
-          echo "Build your Docker image or other artifacts here"
 
       - name: Run Django checks
         run: |
           python manage.py check
-          
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+  
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./trellomini
+          file: ./trellomini/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/trellomini:latest,${{ secrets.DOCKERHUB_USERNAME }}/trellomini:${{ github.sha }}
