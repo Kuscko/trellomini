@@ -11,9 +11,9 @@ class TasksInline(admin.TabularInline):
 # Register models here.
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'updated_at', 'created_at')
+    list_display = ('title', 'owner', 'updated_at', 'created_at')
     list_filter = ('owner', 'created_at', 'updated_at')
-    search_fields = ('name', 'owner__username')
+    search_fields = ('title', 'owner__username')
     inlines = [TasksInline]
 
 
