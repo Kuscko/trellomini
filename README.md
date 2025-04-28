@@ -1,64 +1,86 @@
 # 🧱 TrelloMini
 
-TrelloMini is a lightweight, Kanban-style task and project management web application developed using Django. Created as the final project for **CEN4031 – Advanced Programming Frameworks**, this app provides a focused, minimal interface for tracking tasks within multiple projects using familiar Trello-like cards and columns.
+TrelloMini is a lightweight, Kanban-style task and project management web application developed using Django.
+
+Built as the final project for **CEN4031 – Advanced Programming Frameworks**, it provides a focused, minimal interface for managing tasks within multiple projects using familiar Trello-like cards and columns.
 
 ---
 
 ## 🚀 Features
 
-- 🧑‍💼 User authentication (login, logout, registration)
+- 🧑‍💼 User authentication (login, logout)
 - 📁 Project creation, editing, and deletion
-- 📝 Task creation, editing, and deletion within each project
+- 📝 Task creation, editing, and deletion within projects
 - 🧩 Simple Kanban board layout per project
-- 🎯 Real-time task status updates (To Do → In Progress → Done)
-- 🎨 Clean Bootstrap 5-powered UI with responsive layout
+- 🎯 Real-time task status updates (To Do → Doing → Done)
+- 🎨 Clean Bootstrap 5-powered responsive UI
+- 🔥 Dependency Injection for maintainability
+- 🧪 Full unit and integration tests
+- 🌐 REST API exposed via Django Rest Framework (DRF)
 
 ---
 
-## 🖼️ Preview
-
-[I am not quite sure how to do this with markdown. Please jump in if you know how to.]
-> A simple Kanban board interface per project.
+## 🛠 Tech Stack
+- Backend: Django 5.1+
+- Frontend: Bootstrap 5
+- Database: SQLite (local dev)
+- API: Django Rest Framework (DRF)
+- Testing: pytest + DRF APIClient
 
 ---
 
-# ⚙️ Installation
+## ⚙️ Installation
 
 > **Recommended**: Use a virtual environment before running the project.
 
-## Clone the repository
-`git clone https://github.com/Kuscko/trellomini.git`
+### Clone the repository
+```
+git clone https://github.com/Kuscko/trellomini.git
+cd trellomini
+```
 
-`cd trellomini`
+### Set up virtual environment (recommended)
+```
+python -m venv .venv
+source .venv/Scripts/activate  # Windows
+# or
+source .venv/bin/activate      # macOS/Linux
+```
 
-## Activate virtual environment (optional but recommended)
-`python -m venv .venv`
+### Install dependencies
+```
+pip install -r requirements.txt
+```
 
-`source .venv/Scripts/activate  # Windows`
-### OR
-`source .venv/bin/activate      # macOS/Linux`
+### Set up the database
+```
+python manage.py migrate
+```
 
-## Install required packages
-`pip install -r requirements.txt`
+### Create a superuser
+```
+python manage.py createsuperuser
+```
 
-## Run migrations
-`python manage.py migrate`
-
-## Start the development server
-`python manage.py runserver`
+### Run the development server
+```
+python manage.py runserver
+```
 
 ---
 
-# 🧪 Running Tests
-`python manage.py test`
+## 🔐 Admin Access
+
+- Visit http://localhost:8000/admin
+- Log in with your superuser credentials
 
 ---
 
-# 🗂️ Project Structure Overview
+## 🗂️ Project Structure Overview
 
 ```
 trellomini/
-├── projects/         # Handles Kanban functionality (models, views, templates)
+├── projects/         # Handles Kanban functionality (models, views, templates, api)
 ├── users/            # Handles authentication (sign up, login, logout)
 ├── trellomini/       # Core Django settings and routing
 ├── templates/        # HTML templates for dashboard and forms
@@ -71,14 +93,64 @@ trellomini/
 
 ---
 
-# 👥 Contributors
-- Tyler Bischoff – [📧Team Lead, Contributor]
-- Patrick Kelly – [🤘⭐ Dev, GitHub, Contributor]
-- Keaton Knippel – [👑GroupMe King, Contributor]
-- Clark Brown – [🥾Bootstrap Bro, Contributor]
+## 🖼️ Preview
+
+[I am not quite sure how to do this with markdown. Please jump in if you know how to.]
+> A simple Kanban board interface per project.
+
+## 🧪 Running Tests
+Run all tests:
+
+```
+pytest --ds=trellomini.settings
+```
+
+Generate a coverage report:
+
+```
+pytest --ds=trellomini.settings --cov=projects --cov-report=term-missing
+```
+
+Tests cover:
+
+- Project and Task creation
+- Task status updates
+- Permissions (ownership, assignment)
+- REST API endpoints (CRUD for projects and tasks)
 
 ---
 
-# 📘 License
+## 🌐 REST API Endpoints
+- `GET /api/projects/ — List your projects`
+- `POST /api/projects/ — Create a new project`
+- `GET /api/projects/<pk>/ — Retrieve a project`
+- `PUT/PATCH /api/projects/<pk>/ — Update a project`
+- `DELETE /api/projects/<pk>/ — Delete a project`
+- `GET /api/tasks/ — List tasks`
+- `POST /api/tasks/ — Create a new task`
+- `GET /api/tasks/<pk>/ — Retrieve a task`
+- `PUT/PATCH /api/tasks/<pk>/ — Update a task`
+- `DELETE /api/tasks/<pk>/ — Delete a task`
+**Authentication: Required (via Django session login)**
+
+---
+
+## 🏆 Bonus Enhancements Completed
+- 🧩 Dependency Injection used across views and APIs (+5 pts)
+- 🧪 Unit and API tests fully written and passing (+5 pts)
+- 🌐 REST API exposed using Django Rest Framework (+5 pts)
+
+---
+
+## 👥 Contributors
+- Tyler Bischoff – [📧Team Lead, Contributor]
+- Patrick Kelly – [🤘⭐ Lead Developer, Contributor]
+- Keaton Knippel – [👑 GroupMe King, Contributor]
+- Clark Brown – [🥾 Bootstrap Bro, Contributor]
+
+---
+
+## 📘 License
 This project is licensed under the MIT License. See LICENSE for more details.
-Developed for educational purposes as part of CEN4031 – Advanced Programming Frameworks at SPC.
+
+Developed for educational purposes as part of **CEN4031 – Advanced Programming Frameworks at SPC**.
