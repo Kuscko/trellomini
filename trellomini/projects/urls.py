@@ -1,6 +1,7 @@
 # projects/urls.py
 from django.urls import path
 from .views import project_list, project_create, project_update, project_delete, project_detail, task_create, task_update, task_delete, task_detail, update_task_status
+from .api_views import ProjectListCreateAPIView, ProjectRetrieveUpdateDestroyAPIView, TaskListCreateAPIView, TaskRetrieveUpdateDestroyAPIView
 
 urlpatterns = [
     # Project URLs
@@ -18,5 +19,9 @@ urlpatterns = [
     # Change Task Status URL
     path("tasks/<int:task_id>/update-status/", update_task_status, name="update_task_status"),
 
-    # path('<int:project_pk>/tasks/<int:task_pk>/detail/', task_detail, name='task_detail'), # Optional detail view for tasks
+    # API routes
+    path('api/projects/', ProjectListCreateAPIView.as_view(), name='api_project_list_create'),
+    path('api/projects/<int:pk>/', ProjectRetrieveUpdateDestroyAPIView.as_view(), name='api_project_detail'),
+    path('api/tasks/', TaskListCreateAPIView.as_view(), name='api_task_list_create'),
+    path('api/tasks/<int:pk>/', TaskRetrieveUpdateDestroyAPIView.as_view(), name='api_task_detail'),
 ]
