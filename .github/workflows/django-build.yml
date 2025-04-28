@@ -42,7 +42,7 @@ jobs:
       - name: Run Django checks and tests
         run: |
           python manage.py check
-          python manage.py test
+          pytest
 
   deploy:
     name: Build and Deploy
