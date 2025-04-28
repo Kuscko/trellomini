@@ -32,8 +32,8 @@ jobs:
           echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
           echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
           echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
-          echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
+          echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
           echo "DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}" >> .env
           echo "EMAIL_SUBJECT_PREFIX=${{ secrets.EMAIL_SUBJECT_PREFIX }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
@@ -72,11 +72,11 @@ jobs:
           echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
           echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
           echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
-          echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
+          echo "EMAIL_HOST_PASSWORD=dummy-placeholder" >> .env
+          echo "SECRET_KEY=dummy-placeholder" >> .env
           echo "DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}" >> .env
           echo "EMAIL_SUBJECT_PREFIX=${{ secrets.EMAIL_SUBJECT_PREFIX }}" >> .env
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           echo "DEBUG=${{ secrets.DEBUG }}" >> .env
 
       - name: Run Django checks
