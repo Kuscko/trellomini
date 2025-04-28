@@ -95,4 +95,6 @@ jobs:
           context: ./trellomini
           file: ./trellomini/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/trellomini:latest,${{ secrets.DOCKERHUB_USERNAME }}/trellomini:${{ github.sha }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/trellomini:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/trellomini:${{ env.SHORT_SHA::7 }}
