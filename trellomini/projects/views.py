@@ -1,13 +1,14 @@
 # projects/views.py
 from django.shortcuts import render, redirect
-from .forms import ProjectForm, TaskForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-import json
 from django.contrib import messages
 from .services import ProjectService, TaskService
-from models import Task
+from .models import Task
+from .forms import ProjectForm, TaskForm
+import json
+
 
 # Project Views
 @login_required
