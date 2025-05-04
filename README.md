@@ -71,7 +71,7 @@ python manage.py runserver
 
 ---
 
-## Docker Deployment
+## 🐳 Docker Deployment
 Build and run the container locally:
 ```
 docker build -t trellomini .
@@ -80,8 +80,28 @@ docker run -p 8000:8000 trellomini
 Or pull the latest image from DockerHub:
 ```
 docker pull kusck0/trellomini:latest
-docker run -p 8000:8000 kusck0/trellomini:latest
+docker run --env-file .env -p 8000:8000 kusck0/trellomini:latest
 ```
+Or run it manually:
+```
+docker pull kusck0/trellomini:latest
+docker run \
+  -e SECRET_KEY=your-real-secret-key \
+  -e EMAIL_HOST_PASSWORD=your-real-smtp-password \
+  -e EMAIL_HOST_USER=smtp@mailtrap.io \
+  -e EMAIL_HOST=live.smtp.mailtrap.io \
+  -e EMAIL_PORT=587 \
+  -e EMAIL_USE_TLS=True \
+  -e DEBUG=False \
+  -p 8000:8000 \
+  kusck0/trellomini:latest
+```
+
+---
+
+## 📁 Environment Requirements
+
+We suggest creating an account on [mailtrap](https://mailtrap.io) for enabling SMPT capabilities for 1000 free emails a month.
 
 ---
 
@@ -100,6 +120,25 @@ EMAIL_SUBJECT_PREFIX=[TrelloMini]
 SECRET_KEY=your-django-secret-key
 DEBUG=False
 ```
+
+---
+
+## 🛠️ Post-Deployment Setup
+After running the container:
+
+Create database tables:
+
+```
+docker exec -it your-container-name python manage.py migrate
+```
+
+Create a superuser (admin account):
+```
+docker exec -it your-container-name python manage.py createsuperuser
+```
+
+✅ Now the application is fully functional.
+
 ---
 
 ## 🔐 Admin Access
