@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Middleware for serving static files in production
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -55,7 +56,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # Add other middleware here
     "django_ratelimit.middleware.RatelimitMiddleware",  # Middleware for rate limiting to prevent abuse of the API
 ]
 
@@ -134,9 +134,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directory for collected static files
 
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Directory for static files in the project
     os.path.join(BASE_DIR, 'trellomini', 'static'),  # Directory for static files in the app
     os.path.join(BASE_DIR, 'projects', 'static'),  # Directory for static files in the projects app
 ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  # Use WhiteNoise for serving static files in production
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

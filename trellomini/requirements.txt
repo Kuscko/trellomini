@@ -3,3 +3,4 @@ django-ratelimit
 python-dotenv
 djangorestframework
 gunicorn
+whitenoise
