@@ -99,7 +99,7 @@ docker run \
 
 ---
 
-##📁 Environment Requirements
+## 📁 Environment Requirements
 
 We suggest creating an account on [mailtrap](https://mailtrap.io) for enabling SMPT capabilities for 1000 free emails a month.
 
