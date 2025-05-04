@@ -2,6 +2,7 @@ Django
 django-ratelimit
 python-dotenv
 djangorestframework
+whitenoise
 # testing libraries
 pytest
 pytest-django
